@@ -1,0 +1,57 @@
+id,title,slug,category,tag,external_url
+1,2048,2048,featured,Puzzle,https://play2048.co/
+2,Pac-Man,pac-man,featured,Classic,https://www.google.com/logos/2010/pacman10-i.html
+3,Snake,snake,featured,Classic,https://www.google.com/fbx?fbx=snake_arcade
+4,Flappy Bird,flappy-bird,featured,Action,https://flappybird.io/
+5,Tetris,tetris,featured,Puzzle,https://tetris.com/play-tetris
+6,Chess,chess,featured,Strategy,https://www.chess.com/play/computer
+7,Bullet Force,bullet-force,action,Shooter,https://www.crazygames.com/embed/bullet-force-multiplayer
+8,Krunker.io,krunker-io,action,FPS,https://krunker.io/
+9,Agar.io,agar-io,action,Multiplayer,https://agar.io/
+10,Slither.io,slither-io,action,Multiplayer,https://slither.io/
+11,Zombs Royale,zombs-royale,action,Battle Royale,https://zombsroyale.io/
+12,Diep.io,diep-io,action,Shooter,https://diep.io/
+37,Shell Shockers,shell-shockers,action,FPS,https://shellshock.io/
+38,Smash Karts,smash-karts,action,Battle,https://smashkarts.io/
+39,1v1.LOL,1v1-lol,action,Shooter,https://1v1.lol/
+40,Surviv.io,surviv-io,action,Battle Royale,https://surviv.io/
+41,Venge.io,venge-io,action,FPS,https://venge.io/
+42,Wings.io,wings-io,action,Arcade,https://wings.io/
+43,Crazy Pixel Apocalypse,crazy-pixel-apocalypse,action,Shooter,https://www.crazygames.com/embed/crazy-pixel-apocalypse
+44,Stick Merge,stick-merge,action,Action,https://www.crazygames.com/embed/stick-merge
+45,Rooftop Snipers,rooftop-snipers,action,Fighting,https://www.crazygames.com/embed/rooftop-snipers
+46,Getaway Shootout,getaway-shootout,action,Action,https://www.crazygames.com/embed/getaway-shootout
+13,Sudoku,sudoku,puzzle,Puzzle,https://sudoku.com/
+14,Mahjong,mahjong,puzzle,Classic,https://www.mahjong.org/
+15,Cut the Rope,cut-the-rope,puzzle,Puzzle,https://www.crazygames.com/embed/cut-the-rope
+16,Wordle,wordle,puzzle,Word,https://www.nytimes.com/games/wordle/index.html
+17,Minesweeper,minesweeper,puzzle,Classic,https://minesweeper.online/
+18,Jigsaw Puzzle,jigsaw-puzzle,puzzle,Puzzle,https://www.jigsawplanet.com/
+19,Moto X3M,moto-x3m,racing,Bike,https://www.crazygames.com/embed/moto-x3m
+20,Road Fury,road-fury,racing,Racing,https://www.crazygames.com/embed/road-fury
+21,Drift Hunters,drift-hunters,racing,Drift,https://drifthunters.io/
+22,Burnout Drift,burnout-drift,racing,Racing,https://www.crazygames.com/embed/burnout-drift
+23,Traffic Rider,traffic-rider,racing,Bike,https://www.crazygames.com/embed/traffic-rider
+24,Parking Fury,parking-fury,racing,Parking,https://www.crazygames.com/embed/parking-fury-3d
+25,Basketball Stars,basketball-stars,sports,Basketball,https://www.crazygames.com/embed/basketball-stars
+26,Soccer Random,soccer-random,sports,Soccer,https://www.crazygames.com/embed/soccer-random
+27,8 Ball Pool,8-ball-pool,sports,Pool,https://www.miniclip.com/games/8-ball-pool-multiplayer/
+28,Baseball Pro,baseball-pro,sports,Baseball,https://www.crazygames.com/embed/baseball-pro
+29,Bowling King,bowling-king,sports,Bowling,https://www.crazygames.com/embed/bowling-king
+30,Table Tennis,table-tennis,sports,Ping Pong,https://www.crazygames.com/embed/table-tennis-world-tour
+31,Space Invaders,space-invaders,classics,Arcade,https://freeinvaders.org/
+32,Donkey Kong,donkey-kong,classics,Arcade,https://www.crazygames.com/embed/donkey-kong
+33,Breakout,breakout,classics,Arcade,https://www.crazygames.com/embed/block-breaker
+34,Frogger,frogger,classics,Arcade,https://www.crazygames.com/embed/frogger-in-toy-town
+35,Galaga,galaga,classics,Arcade,https://www.crazygames.com/embed/galaxian
+36,Asteroids,asteroids,classics,Arcade,https://www.crazygames.com/embed/asteroids
+47,Geometry Dash,geometry-dash,action,Platformer,https://geometrydash.io/
+48,Helix Jump,helix-jump,action,Arcade,https://www.crazygames.com/game/helix-jump
+49,Run 3,run-3,action,Endless,https://www.coolmathgames.com/0-run-3
+50,Candy Crush,candy-crush,puzzle,Match-3,https://www.crazygames.com/game/candy-crush-saga
+51,Unblock Me,unblock-me,puzzle,Logic,https://www.unblockmeapp.com/
+52,Flow Free,flow-free,puzzle,Flow,https://www.crazygames.com/game/flow-free
+53,Temple Run,temple-run,racing,Endless,https://www.crazygames.com/game/temple-run
+54,Asphalt 9,asphalt-9,racing,Arcade,https://www.crazygames.com/game/asphalt-9-legends
+55,Super Soccer Stars,super-soccer-stars,sports,Soccer,https://www.crazygames.com/game/super-soccer-stars
+56,Wiffle Ball,wiffle-ball,sports,Baseball,https://www.crazygames.com/game/wiffle-ball

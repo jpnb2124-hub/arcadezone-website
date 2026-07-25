@@ -1,0 +1,82 @@
+// Render games into their grids
+function slugifyTitle(title) {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function renderGames() {
+  const categories = ['featured', 'action', 'puzzle', 'racing', 'sports', 'classics'];
+  const gridIds = {
+    featured: 'featuredGrid',
+    action: 'actionGrid',
+    puzzle: 'puzzleGrid',
+    racing: 'racingGrid',
+    sports: 'sportsGrid',
+    classics: 'classicsGrid'
+  };
+
+  categories.forEach(cat => {
+    const grid = document.getElementById(gridIds[cat]);
+    if (!grid) return;
+    const games = GAMES.filter(g => g.category === cat);
+    grid.innerHTML = games.map(game => createGameCard(game)).join('');
+  });
+}
+
+function createGameCard(game) {
+  const page = `${slugifyTitle(game.title)}.html`;
+  return `
+    <a class="game-card" href="${page}">
+      <div class="game-thumb">${game.emoji}</div>
+      <div class="play-overlay">▶</div>
+      <div class="game-info">
+        <div class="game-title">${game.title}</div>
+        <span class="game-tag">${game.tag}</span>
+      </div>
+    </a>
+  `;
+}
+
+// Search games
+function searchGames() {
+  const query = document.getElementById('searchInput').value.toLowerCase().trim();
+  if (!query) return;
+
+  // Remove previous results
+  const existing = document.getElementById('searchResults');
+  if (existing) existing.remove();
+
+  const results = GAMES.filter(g =>
+    g.title.toLowerCase().includes(query) ||
+    g.tag.toLowerCase().includes(query) ||
+    g.category.toLowerCase().includes(query)
+  );
+
+  const container = document.createElement('div');
+  container.id = 'searchResults';
+
+  if (results.length === 0) {
+    container.innerHTML = `<h2>No games found for "${query}"</h2>`;
+  } else {
+    container.innerHTML = `
+      <h2>🔍 Results for "${query}" (${results.length} games)</h2>
+      <div class="games-grid">${results.map(createGameCard).join('')}</div>
+    `;
+  }
+
+  document.querySelector('.hero').insertAdjacentElement('afterend', container);
+  container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Search on Enter key
+const searchInput = document.getElementById('searchInput');
+if (searchInput) {
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') searchGames();
+  });
+}
+
+// Init
+renderGames();
