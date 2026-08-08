@@ -3,7 +3,7 @@ import json
 import re
 from pathlib import Path
 
-BASE_URL = "https://pxlrush.com"
+BASE_URL = "https://www.pxlrush.com"
 ROOT = Path(__file__).parent
 CSV_PATH = ROOT / "games.csv"
 TEMPLATE_PATH = ROOT / "game-template.html"
