@@ -5,8 +5,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="robots" content="index, follow" />
-  <title>ArcadeZone – Free Unblocked Games</title>
-  <meta name="description" content="Play free unblocked games online. No downloads, no sign-up. Action, puzzle, racing and more!"/>
+  <title>ArcadeZone – Free Browser Games</title>
+  <meta name="description" content="Play free browser games online. No downloads, no sign-up. Action, puzzle, racing and more."/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <link rel="canonical" href="https://pxlrush.com/" />
@@ -80,8 +80,8 @@
           <p>ArcadeZone is a simple hub for browser games that work on desktop and mobile. Every title has its own page with helpful tips, controls, and a direct play link so you can jump in faster.</p>
           <div class="hero-copy-list">
             <div class="hero-feature">
-              <strong>School-friendly access</strong>
-              <span>Games that load quickly and work on most school or workplace networks.</span>
+              <strong>Instant browser access</strong>
+              <span>Games that load quickly in modern desktop and mobile browsers.</span>
             </div>
             <div class="hero-feature">
               <strong>Clear game guidance</strong>
@@ -89,7 +89,7 @@
             </div>
             <div class="hero-feature">
               <strong>Extensive game library</strong>
-              <span>More than 50 browser game pages across action, puzzle, racing, sports, and classic genres.</span>
+              <span>Twenty reviewed game pages plus archive access across action, puzzle, racing, sports, and classic genres.</span>
             </div>
           </div>
         </div>
@@ -179,26 +179,35 @@
     </div>
   </section>
 
-  <!-- AD SLOT TOP -->
-  <div class="ad-slot">
-    <!-- Google AdSense code goes here -->
-    <div class="ad-placeholder">Advertisement</div>
-  </div>
+  <section class="editorial-section">
+    <div class="editorial-inner">
+      <h2>Top picks this month</h2>
+      <div class="editorial-grid">
+        <article class="editorial-card">
+          <h3><a href="/2048.html">2048</a></h3>
+          <p>Best for puzzle players who want a short session with real strategy depth.</p>
+        </article>
+        <article class="editorial-card">
+          <h3><a href="/krunker-io.html">Krunker.io</a></h3>
+          <p>Fast browser FPS with strong movement mechanics and high replay value.</p>
+        </article>
+        <article class="editorial-card">
+          <h3><a href="/drift-hunters.html">Drift Hunters</a></h3>
+          <p>A reliable pick for controlled drifting, tuning, and score-focused runs.</p>
+        </article>
+      </div>
+    </div>
+  </section>
 
   <!-- FEATURED GAMES -->
   <section id="featured" class="section">
     <h2 class="section-title">🔥 Featured Games</h2>
     <div class="games-grid" id="featuredGrid">
-      <div class="game-card"><a href="2048.html">🔢 2048</a></div>
-      <div class="game-card"><a href="pac-man.html">👾 Pac‑Man</a></div>
-      <div class="game-card"><a href="snake.html">🐍 Snake</a></div>
+      <a class="game-card" href="2048.html"><div class="game-thumb">🔢</div><div class="game-info"><div class="game-title">2048</div><span class="game-tag">Puzzle</span></div></a>
+      <a class="game-card" href="pac-man.html"><div class="game-thumb">👾</div><div class="game-info"><div class="game-title">Pac-Man</div><span class="game-tag">Classic</span></div></a>
+      <a class="game-card" href="snake.html"><div class="game-thumb">🐍</div><div class="game-info"><div class="game-title">Snake</div><span class="game-tag">Classic</span></div></a>
     </div>
   </section>
-
-  <!-- AD SLOT MID -->
-  <div class="ad-slot">
-    <div class="ad-placeholder">Advertisement</div>
-  </div>
 
   <!-- ACTION -->
   <section id="action" class="section">
@@ -230,21 +239,35 @@
     <div class="games-grid" id="classicsGrid"></div>
   </section>
 
-  <!-- AD SLOT BOTTOM -->
-  <div class="ad-slot">
-    <div class="ad-placeholder">Advertisement</div>
-  </div>
+  <section class="editorial-section">
+    <div class="editorial-inner editorial-info-grid">
+      <article class="editorial-card">
+        <h2>How we choose games</h2>
+        <p>ArcadeZone keeps a curated index only. Games are reviewed for control quality, replay value, and accessibility before being listed as indexed pages.</p>
+        <p><a href="/editorial-policy.html">Read our editorial policy</a></p>
+      </article>
+      <article class="editorial-card">
+        <h2>Recently reviewed</h2>
+        <ul class="review-list">
+          <li><a href="/1v1-lol.html">1v1.LOL</a> - updated with tactics and FAQ</li>
+          <li><a href="/geometry-dash.html">Geometry Dash</a> - updated with progression guide</li>
+          <li><a href="/8-ball-pool.html">8 Ball Pool</a> - updated with shot-planning tips</li>
+        </ul>
+      </article>
+    </div>
+  </section>
  </main>
  
   <!-- FOOTER -->
   <footer>
     <div class="footer-inner">
       <div class="logo">🕹️ <span>Arcade</span>Zone</div>
-      <p>Free unblocked games for everyone. Play at school, work, or home.</p>
+      <p>Curated browser games with practical tips and direct play links.</p>
       <div class="footer-links">
         <a href="privacy.html">Privacy Policy</a>
         <a href="contact.html">Contact</a>
         <a href="about.html">About</a>
+        <a href="editorial-policy.html">Editorial Policy</a>
         <a href="dmca.html">DMCA</a>
         <a href="terms.html">Terms</a>
         <a href="all-games.html">All Games</a>
@@ -253,9 +276,13 @@
     </div>
   </footer>
 
+  <div id="cookieNotice" class="cookie-notice" hidden>
+    <p>We use cookies to run the site and to serve ads through Google AdSense. By continuing to use ArcadeZone, you consent to cookie use as described in our <a href="/privacy.html">Privacy Policy</a>.</p>
+    <button id="cookieNoticeAccept" type="button">Got it</button>
+  </div>
+
   <script defer src="js/games.js"></script>
   <script defer src="js/main.js"></script>
 
 </body>
 </html>
-

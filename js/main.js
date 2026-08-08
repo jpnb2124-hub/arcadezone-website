@@ -1,10 +1,34 @@
-// Render games into their grids
 function slugifyTitle(title) {
   return title
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
 }
+
+const CURATED_GAME_SLUGS = new Set([
+  '2048',
+  'pac-man',
+  'snake',
+  'flappy-bird',
+  'tetris',
+  'chess',
+  'krunker-io',
+  'slither-io',
+  '1v1-lol',
+  'geometry-dash',
+  'moto-x3m',
+  'drift-hunters',
+  'basketball-stars',
+  '8-ball-pool',
+  'sudoku',
+  'wordle',
+  'minesweeper',
+  'run-3',
+  'space-invaders',
+  'galaga'
+]);
+
+const CURATED_GAMES = GAMES.filter(game => CURATED_GAME_SLUGS.has(slugifyTitle(game.title)));
 
 function renderGames() {
   const categories = ['featured', 'action', 'puzzle', 'racing', 'sports', 'classics'];
@@ -20,7 +44,7 @@ function renderGames() {
   categories.forEach(cat => {
     const grid = document.getElementById(gridIds[cat]);
     if (!grid) return;
-    const games = GAMES.filter(g => g.category === cat);
+    const games = CURATED_GAMES.filter(g => g.category === cat);
     grid.innerHTML = games.map(game => createGameCard(game)).join('');
   });
 }
@@ -39,16 +63,14 @@ function createGameCard(game) {
   `;
 }
 
-// Search games
 function searchGames() {
   const query = document.getElementById('searchInput').value.toLowerCase().trim();
   if (!query) return;
 
-  // Remove previous results
   const existing = document.getElementById('searchResults');
   if (existing) existing.remove();
 
-  const results = GAMES.filter(g =>
+  const results = CURATED_GAMES.filter(g =>
     g.title.toLowerCase().includes(query) ||
     g.tag.toLowerCase().includes(query) ||
     g.category.toLowerCase().includes(query)
@@ -70,7 +92,6 @@ function searchGames() {
   container.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// Search on Enter key
 const searchInput = document.getElementById('searchInput');
 if (searchInput) {
   searchInput.addEventListener('keydown', (e) => {
@@ -78,5 +99,21 @@ if (searchInput) {
   });
 }
 
-// Init
+function initCookieNotice() {
+  const notice = document.getElementById('cookieNotice');
+  const acceptBtn = document.getElementById('cookieNoticeAccept');
+  if (!notice || !acceptBtn) return;
+
+  if (localStorage.getItem('arcadezone_cookie_notice_accepted') === '1') {
+    return;
+  }
+
+  notice.hidden = false;
+  acceptBtn.addEventListener('click', () => {
+    localStorage.setItem('arcadezone_cookie_notice_accepted', '1');
+    notice.hidden = true;
+  });
+}
+
 renderGames();
+initCookieNotice();

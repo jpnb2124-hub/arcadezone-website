@@ -1,4 +1,5 @@
 import csv
+import json
 import re
 from pathlib import Path
 
@@ -8,291 +9,437 @@ CSV_PATH = ROOT / "games.csv"
 TEMPLATE_PATH = ROOT / "game-template.html"
 OUTPUT_DIR = ROOT
 
-CATEGORY_SENTENCES = {
-    "featured": "This featured pick highlights a top browser game with strong replay value and easy access.",
-    "action": "Action games on ArcadeZone are designed for fast reflexes, clear goals, and browser-friendly controls.",
-    "puzzle": "Puzzle games are chosen for their thoughtful challenge, relaxing gameplay, and smart problem-solving.",
-    "racing": "Racing games deliver quick circuits, responsive steering, and easy-to-learn mechanics for instant fun.",
-    "sports": "Sports games bring favorite athletics into the browser with intuitive controls and competitive action.",
-    "classics": "Classic arcade games are included for nostalgic play and simple, addictive gameplay that works everywhere.",
+INDEXABLE_SLUGS = {
+    "2048",
+    "pac-man",
+    "snake",
+    "flappy-bird",
+    "tetris",
+    "chess",
+    "krunker-io",
+    "slither-io",
+    "1v1-lol",
+    "geometry-dash",
+    "moto-x3m",
+    "drift-hunters",
+    "basketball-stars",
+    "8-ball-pool",
+    "sudoku",
+    "wordle",
+    "minesweeper",
+    "run-3",
+    "space-invaders",
+    "galaga",
 }
 
-TIP_TEMPLATES = {
-    "featured": [
-        "Take your time as you learn the pace and find the right rhythm for each level.",
-        "Use the game’s strengths to your advantage — every free browser title has its own pattern.",
-        "Build confidence by practicing the same move sequence until it becomes second nature."
+FAQ_GAME_SLUGS = {
+    "2048",
+    "pac-man",
+    "snake",
+    "flappy-bird",
+    "tetris",
+    "chess",
+    "krunker-io",
+    "slither-io",
+    "1v1-lol",
+    "geometry-dash",
+}
+
+EDITORIAL_PROFILES = {
+    "2048": {
+        "hook": "2048 looks simple, but the game punishes random swipes fast. The goal is not just making one 2048 tile. The real challenge is controlling board space so you can keep merging without creating dead corners.",
+        "strategy": "The most reliable method is to keep your highest tile locked in one corner and build a descending line next to it. Swipe in two directions most of the time, and use the opposite direction only when you are forced to reset the row. This keeps new tiles predictable and lowers panic moves.",
+        "mistakes": "Most losses happen when players chase small merges in the center or break their corner too early. If you need one emergency move, take it, then rebuild shape immediately instead of trying to force a perfect board again.",
+        "who_for": "If you like puzzle games that reward consistency over speed, 2048 is one of the strongest browser choices. It is easy to start in under a minute and still gives long-term skill progression.",
+    },
+    "pac-man": {
+        "hook": "Pac-Man remains one of the best examples of readable arcade design. You always know what your objective is: clear pellets, route cleanly, and survive ghost pressure.",
+        "strategy": "Use the tunnels and outer lanes to reset ghost spacing before committing to dense pellet zones. Save power pellets for high-risk moments instead of using them instantly. In longer runs, route planning matters more than reaction time.",
+        "mistakes": "New players often drift into corners without an exit plan and treat all ghosts as one threat. In practice, each ghost movement pattern creates different pressure, so avoid repeating the same escape path every lap.",
+        "who_for": "Pac-Man is ideal for players who enjoy pattern reading, route optimization, and score chasing without complicated controls.",
+    },
+    "snake": {
+        "hook": "Snake is a pure positioning game. Every apple increases your future difficulty, so early habits decide whether you survive late rounds.",
+        "strategy": "Aim for smooth loops instead of aggressive cutbacks. Keep your path open and avoid boxing yourself into small pockets. When your snake is long, think two or three turns ahead before taking food near edges.",
+        "mistakes": "Common losses come from greedy food grabs and last-second reversals that close your own lane. A slower, cleaner loop is usually better than a risky shortcut.",
+        "who_for": "Snake is great for players who want a quick game with clear rules and a high skill ceiling built around patience and spacing.",
+    },
+    "flappy-bird": {
+        "hook": "Flappy Bird feels brutal because it tests one thing relentlessly: rhythm under pressure. The controls are minimal, but timing discipline is everything.",
+        "strategy": "Keep your taps light and consistent, then adjust in tiny corrections near the middle of each pipe gap. Focus your eyes one obstacle ahead, not directly on the bird, to improve anticipation.",
+        "mistakes": "Most failed runs happen when players over-correct after one bad flap. Reset mentally after each pipe and return to the same tap tempo instead of mashing.",
+        "who_for": "If you enjoy difficult arcade loops and short retry cycles, Flappy Bird delivers instant challenge without setup.",
+    },
+    "tetris": {
+        "hook": "Tetris is one of the cleanest strategy-action hybrids ever made. You balance survival and scoring at the same time, and both decisions happen every piece.",
+        "strategy": "Keep a flat stack, avoid deep gaps, and reserve one lane for long I-piece clears. Single and double clears are fine when pressure rises; forcing only Tetrises can end runs early if your board shape collapses.",
+        "mistakes": "The biggest mistake is building uneven towers while waiting too long for one piece. Use hold and previews to plan, but prioritize board health over perfect scoring lines.",
+        "who_for": "Tetris is ideal for players who like fast thinking, spatial planning, and measurable improvement over many sessions.",
+    },
+    "chess": {
+        "hook": "Online chess rewards fundamentals more than flashy tactics. Clean opening principles and blunder prevention beat memorized traps at most casual levels.",
+        "strategy": "Develop minor pieces early, fight for center squares, and castle before launching attacks. In the middlegame, improve your worst-placed piece first and calculate forcing moves before playing automatic recaptures.",
+        "mistakes": "Most games are decided by one-move hangs. Slow down when pieces become tactical, and always ask what your opponent threatens after your move.",
+        "who_for": "Chess is best for players who enjoy long-form strategy, deliberate planning, and steady skill growth.",
+    },
+    "krunker-io": {
+        "hook": "Krunker.io stays popular because it combines fast FPS movement with low friction browser access. Good aim helps, but movement control wins more duels than raw flick speed.",
+        "strategy": "Practice slide-hopping routes and peek angles on familiar maps. Enter fights with momentum, pre-aim likely corners, and disengage quickly when outnumbered.",
+        "mistakes": "Many players sprint into open lanes and over-challenge after one kill. Treat health as a resource and reposition after each engagement.",
+        "who_for": "Krunker.io is strong for players who want competitive shooter mechanics without installing a full client.",
+    },
+    "slither-io": {
+        "hook": "Slither.io looks casual, but top play is about spacing control and risk management around crowded zones.",
+        "strategy": "Grow safely on outer lanes first, then contest center areas when you can read traffic. Use short boosts for positioning, not constant speed, so you do not burn mass unnecessarily.",
+        "mistakes": "Frequent deaths come from tunnel vision while chasing one target. Track nearby snake heads first, food second.",
+        "who_for": "This game works well for players who enjoy multiplayer pressure and gradual scaling from calm starts to chaotic mid-game fights.",
+    },
+    "1v1-lol": {
+        "hook": "1v1.LOL blends quick building with direct duels, so mechanics and decision speed are both required.",
+        "strategy": "Use simple, repeatable build patterns under pressure and prioritize right-hand peeks. After each shot, either reset to cover or take immediate height if your opponent is weak.",
+        "mistakes": "A common issue is overbuilding without a plan. Extra structures do not help if they remove your line of sight or drain your reaction window.",
+        "who_for": "1v1.LOL suits players who like head-to-head competition, short rounds, and skill expression through movement plus building.",
+    },
+    "geometry-dash": {
+        "hook": "Geometry Dash is precision memory gameplay. The level rhythm is fixed, but your consistency under speed is the challenge.",
+        "strategy": "Break difficult sections into checkpoints mentally and train each one for clean timing. Keep input rhythm stable and avoid changing click force between attempts.",
+        "mistakes": "Players often rush retries without identifying where timing drift starts. Review your last failure point, then target that transition on the next run.",
+        "who_for": "Great for players who enjoy hard platforming, music-sync pacing, and mastery through repetition.",
+    },
+    "moto-x3m": {
+        "hook": "Moto X3M is less about top speed and more about controlled momentum. Fast runs come from clean landings, not constant acceleration.",
+        "strategy": "Use throttle in bursts before ramps, then stabilize bike angle during airtime. Land rear wheel first when possible to keep traction and avoid chain crashes.",
+        "mistakes": "New players hold acceleration through every obstacle and lose time on wipeouts. Sacrifice a little speed to guarantee stable recoveries.",
+        "who_for": "Moto X3M is ideal for players who like time-trial racing with physics-based bike control.",
+    },
+    "drift-hunters": {
+        "hook": "Drift Hunters rewards smooth steering and throttle discipline more than aggressive flicking.",
+        "strategy": "Enter corners with controlled speed, initiate drift early, and modulate throttle to keep angle without spinning. Learn one track deeply before rotating cars.",
+        "mistakes": "Oversteer loops and wall taps usually come from late entries. Brake earlier and prioritize clean exits for better combo retention.",
+        "who_for": "Excellent for players who enjoy tuning, style-focused scoring, and technical car control.",
+    },
+    "basketball-stars": {
+        "hook": "Basketball Stars focuses on timing windows and quick reads in one-on-one scenarios.",
+        "strategy": "Mix drives and jump shots to avoid predictable defense. On defense, stay balanced and contest late instead of biting on first fakes.",
+        "mistakes": "Players often force contested shots early in the clock. Create separation first, then take high-percentage attempts.",
+        "who_for": "Best for players who want competitive sports sessions with short rounds and immediate rematches.",
+    },
+    "8-ball-pool": {
+        "hook": "8 Ball Pool is a planning game disguised as a cue game. Shot order and cue-ball control decide matches before the final pocket.",
+        "strategy": "Choose your suit based on easiest breakout routes, not first available shot. Leave simple positional angles and protect your next ball every turn.",
+        "mistakes": "Common losses come from tunnel vision on one difficult ball and poor cue-ball speed. Play for shape, not hero shots.",
+        "who_for": "Great for players who prefer slower tactical play and clean execution over reaction-heavy gameplay.",
+    },
+    "sudoku": {
+        "hook": "Sudoku is strongest when played methodically. Fast guesses feel productive, but disciplined elimination solves puzzles more reliably.",
+        "strategy": "Scan rows, columns, and boxes for singles first, then move to candidate pairs and hidden constraints. Keep notes tidy so advanced patterns stay visible.",
+        "mistakes": "The usual trap is placing numbers on assumption instead of proof. One bad guess can corrupt half the board.",
+        "who_for": "Sudoku suits players who enjoy pure logic and steady progression from easy warmups to harder grids.",
+    },
+    "wordle": {
+        "hook": "Wordle is a compact deduction game where information value matters more than lucky letter hits.",
+        "strategy": "Open with balanced words containing common consonants and vowels, then refine quickly based on position feedback. Prioritize narrowing candidates over repeating uncertain letters.",
+        "mistakes": "Many players chase green letters too early and ignore broader elimination. In early turns, information gain is your strongest asset.",
+        "who_for": "Wordle is perfect for short daily play and language-focused puzzle fans.",
+    },
+    "minesweeper": {
+        "hook": "Minesweeper rewards logic chains and risk control. The board is random, but most wins are produced by disciplined deduction.",
+        "strategy": "Resolve low-risk edge clusters first, then use number relationships to unlock constrained tiles. Flag confidently only when count logic is complete.",
+        "mistakes": "Players lose by guessing too early or forgetting already-solved number counts. Re-check neighboring constraints before every risky click.",
+        "who_for": "A great fit for puzzle players who like probability, pattern recognition, and tactical patience.",
+    },
+    "run-3": {
+        "hook": "Run 3 combines endless runner speed with gravity-shifting routes, which makes path planning just as important as reflexes.",
+        "strategy": "Use wall-running lanes to avoid broken tiles and keep momentum through turns. In harder segments, prioritize survival routes before speed routes.",
+        "mistakes": "Most failures come from overcommitting to center lanes and late jumps on collapsing tiles.",
+        "who_for": "Run 3 is ideal for players who enjoy movement puzzles and high-speed platforming.",
+    },
+    "space-invaders": {
+        "hook": "Space Invaders still works because it turns simple controls into escalating pressure. The threat grows naturally as rows descend.",
+        "strategy": "Clear one side deliberately to create safer shooting angles, and use barriers as temporary tools instead of permanent cover.",
+        "mistakes": "A frequent mistake is drifting too much while firing, which breaks accuracy and opens lines for enemy shots.",
+        "who_for": "Perfect for players who like classic score attacks and pattern-driven arcade pacing.",
+    },
+    "galaga": {
+        "hook": "Galaga blends memorization and reactive dodging. Enemy formations are predictable, but execution under speed is the core test.",
+        "strategy": "Learn opening wave patterns, then hold calm center positioning until dive attacks begin. Shoot in controlled bursts to stay accurate.",
+        "mistakes": "Many runs end from over-chasing enemies at screen edges. Stay in stable lanes and prioritize survival over one extra target.",
+        "who_for": "Great for fans of classic shooters who want high replay value and clear mechanical depth.",
+    },
+}
+
+FAQS = {
+    "2048": [
+        ("What is the best first goal in 2048?", "Focus on keeping your highest tile in one corner and maintaining board shape. High tiles come naturally when your board stays organized."),
+        ("Should I always chase 2048 immediately?", "No. Stable positioning matters more. Many players reach 2048 late in a run after prioritizing survival and clean merges."),
+        ("Is 2048 better on keyboard or touch?", "Keyboard is usually more precise, but touch works well once you keep swipes short and deliberate."),
     ],
-    "action": [
-        "Focus on movement first, then add aiming once the controls feel comfortable.",
-        "Small adjustments are often better than fast, risky maneuvers in browser action games.",
-        "Watch the game environment and use cover, speed, or space to manage pressure."
+    "pac-man": [
+        ("How do I survive longer in Pac-Man?", "Route wider lanes first and save power pellets for pressured moments instead of using them instantly."),
+        ("Do ghost patterns matter for casual players?", "Yes. Recognizing movement tendencies helps you avoid panic turns and trap situations."),
+        ("What is the easiest way to improve score?", "Cut wasted movement. Efficient pellet routes and safer resets increase score naturally."),
     ],
-    "puzzle": [
-        "Slow down and look for the best move rather than the first move that seems possible.",
-        "Many puzzle games reward planning ahead more than fast clicking.",
-        "If a level feels difficult, step back and re-evaluate the objective before replaying."
+    "snake": [
+        ("Why do I lose near high scores?", "Late-game losses usually come from tight turns and greedy food grabs. Keep larger loops and open exits."),
+        ("Should I move fast in Snake?", "Consistency is more important than speed. Clean routes produce better long runs."),
+        ("What is a good beginner strategy?", "Stay near the outer area, build smooth loops, and avoid cutting across your own body."),
     ],
-    "racing": [
-        "Smooth steering and controlled acceleration beat aggressive driving in browser races.",
-        "Learn the curves and braking points to keep each track clean and fast.",
-        "Use the camera, if available, to see the next turn and choose the safest racing line."
+    "flappy-bird": [
+        ("How can I be more consistent in Flappy Bird?", "Use light taps at a steady rhythm and make tiny corrections instead of hard recoveries."),
+        ("Where should I look while playing?", "Watch the next pipe gap, not just the bird. This improves timing anticipation."),
+        ("Is Flappy Bird mostly luck?", "No. The game is skill-based rhythm control with short retry loops."),
     ],
-    "sports": [
-        "Master the timing for shots, passes, or swings to stay in control of the play.",
-        "Keep an eye on the entire field so you can react to opponent movement quickly.",
-        "Use the game’s practice mode or warm-up to get a feel for the controls before competing."
+    "tetris": [
+        ("Do I need only Tetrises to play well?", "No. Efficient singles and doubles are essential when your stack is unstable."),
+        ("What causes most losses in Tetris?", "Uneven stacks and waiting too long for one piece cause top-outs."),
+        ("What should beginners practice first?", "Board cleanliness, safe placements, and reading upcoming pieces."),
     ],
-    "classics": [
-        "Classic games often reward consistency and timing more than quick reactions.",
-        "Focus on the core rule set first — then begin trying higher scores or faster completion.",
-        "Remember that many classic browser games are all about pattern recognition."
+    "chess": [
+        ("How do beginners improve quickly in chess?", "Stop one-move blunders first, then build opening principles and basic tactical awareness."),
+        ("Should I memorize many openings?", "Not initially. Development, king safety, and center control matter more."),
+        ("What time control is best for learning?", "Rapid or longer games usually improve decision quality better than ultra-fast blitz."),
+    ],
+    "krunker-io": [
+        ("What matters most in Krunker.io?", "Movement plus positioning. Aim improves, but map control wins more fights."),
+        ("How do I win more duels?", "Pre-aim corners, enter with momentum, and disengage when outnumbered."),
+        ("Is slide-hopping required?", "It is not mandatory for beginners, but it becomes very valuable at higher skill levels."),
+    ],
+    "slither-io": [
+        ("How should I start in Slither.io?", "Farm safely on outer lanes before entering high-traffic center zones."),
+        ("When should I boost?", "Use short boosts for positioning or escapes, not constant movement."),
+        ("Why do I die in crowds?", "Tunnel vision on one target. Track nearby snake heads first, then chase mass."),
+    ],
+    "1v1-lol": [
+        ("What should I practice first in 1v1.LOL?", "Repeatable build-defense patterns and simple peek shots."),
+        ("Why do I lose close fights?", "Overbuilding and poor line-of-sight control are common causes."),
+        ("Is high ground always the best choice?", "Not always, but it is usually strong if you can hold cover and sightlines."),
+    ],
+    "geometry-dash": [
+        ("How do I beat hard sections in Geometry Dash?", "Split the level into segments and drill transitions where timing breaks."),
+        ("Should I change click style often?", "No. Keep click force and rhythm consistent for stable muscle memory."),
+        ("What causes repeated fails at the same spot?", "Pacing drift before the obstacle. Track the lead-in section, not just the fail tile."),
     ],
 }
 
-CONTROL_TEMPLATES = {
-    "Action": "Use keyboard and mouse combinations for movement, aiming, and special actions.",
-    "Puzzle": "Click or tap to move pieces, and use keyboard arrows when the game supports them.",
-    "Racing": "Use arrow keys or WASD for driving controls and respond to each turn carefully.",
-    "Sports": "Most sports games use mouse control or simple key presses to manage moves and shots.",
-    "Classic": "Classic games usually use arrow keys or a single action button for simple play.",
-    "Strategy": "Use precise clicks and slow, thoughtful decisions to stay in control of the board.",
-    "Shooter": "Use the mouse to aim and fire, and keyboard keys to move around the map.",
-    "Arcade": "Enjoy quick, reactive controls that keep you focused on score and timing.",
-    "Multiplayer": "Stay aware of other players while controlling your character with keyboard and mouse input.",
-    "Battle Royale": "Rely on movement, cover, and a careful approach while you compete against many opponents.",
-    "Platformer": "Jump, move, and time your actions precisely to cross each obstacle cleanly.",
-    "Bike": "Use throttle and steering controls to manage speed and stay on the track.",
-    "Drift": "Focus on timing and smooth turns to keep your vehicle drifting through each bend.",
-    "Pool": "Use mouse drag and release or arrow controls to aim and hit the cue ball with precise force.",
-    "Baseball": "Aim carefully and time each swing to hit the ball toward the open field.",
-    "Bowling": "Line up your shot and roll with steady control to keep the ball in the strike lane.",
-    "Ping Pong": "Use quick reflexes and short movements to return each shot and keep the rally going.",
-    "Word": "Type letters carefully and focus on clues to solve each word challenge quickly.",
-    "Endless": "Keep moving without pausing and adapt to new obstacles as the game speeds up.",
-    "Match-3": "Swap tiles or pieces to create matches and clear the board efficiently.",
-    "Logic": "Think through each move, then act with patience to solve the puzzle steadily.",
-}
-
-HISTORY_TEMPLATES = {
-    "2048": "First released as a browser puzzle challenge, 2048 became popular for its elegant number-merging mechanic and easy-to-learn rules.",
-    "Pac-Man": "Pac-Man is one of the oldest arcade classics, with a simple chase-and-eat objective that defined a generation of games.",
-    "Snake": "Snake is a timeless arcade favorite where the goal is to grow as long as possible without running into yourself.",
+SESSION_NOTES = {
+    "action": "These sessions are usually best in short bursts where you can focus on one movement habit, one aiming habit, or one route improvement at a time.",
+    "puzzle": "These games work best when you slow down slightly, pay attention to board state, and treat each run like a small problem-solving exercise rather than a speed test.",
+    "racing": "The browser versions are most rewarding when you repeat tracks or levels a few times in a row so braking points, landings, and corner timing become automatic.",
+    "sports": "Short repeat sessions help the most here because timing, spacing, and shot selection improve quickly when you focus on one matchup pattern at a time.",
+    "classics": "Classic arcade sessions reward repetition. A few focused runs are usually enough to see patterns, improve routes, and push your score higher.",
+    "featured": "Featured picks are chosen because they stay enjoyable even in quick sessions and still offer room to improve after the basics click.",
 }
 
 
-def slugify(title: str) -> str:
-    return title.lower().replace(' ', '-').replace("'", '').replace('.', '').replace('é', 'e')
+def slugify(text: str) -> str:
+    return text.lower().replace(" ", "-").replace("'", "").replace(".", "").replace("é", "e")
 
 
-def make_description(game, related_games):
-    title = game['title']
-    category = game['category']
-    tag = game['tag']
-    intro = (
-        f"{title} is a browser-friendly {tag.lower()} game on ArcadeZone that plays instantly in your web browser. "
-        f"This page explains the core rules, the best way to approach each session, and how to enjoy {title} without downloads or extra installs."
-    )
-    history = HISTORY_TEMPLATES.get(title, f"This browser version of {title} fits the category of {category} games that are built for fast playing and repeat sessions.")
-    history += " " + CATEGORY_SENTENCES.get(category, "This game offers a browser-ready play experience.")
-    controls = (
-        f"Controls are simple enough for quick games and satisfying enough for longer play. "
-        f"{CONTROL_TEMPLATES.get(tag, CONTROL_TEMPLATES.get(category.capitalize(), 'Use simple keyboard, mouse, or touch actions to play.'))} "
-        f"You can play {title} on desktop or mobile, depending on the browser and the page version."
-    )
-    strategy = (
-        f"To improve in {title}, focus on the most important idea for the genre: {tag.lower()} games often reward good timing, pattern recognition, and steady progress. "
-        f"This page also includes practical tips that help you find the right pace and avoid common mistakes while playing."
-    )
-    related_note = ""
-    if related_games:
-        links = []
-        for related in related_games[:3]:
-            links.append(f"<a href=\"/{related['slug']}.html\">{related['title']}</a>")
-        related_sentence = ', '.join(links[:2])
-        if len(links) > 2:
-            related_sentence += f", and {links[2]}"
-        related_note = (
-            f"If you enjoy {tag.lower()} games, try {related_sentence} next. "
-            f"All of these are listed on the <a href=\"/all-games.html\">ArcadeZone All Games</a> page for quick access."
-        )
-    closing = (
-        f"ArcadeZone keeps this {title} page clean and easy to use, with a strong focus on playability and helpful guidance. "
-        f"Bookmark this page if you want faster access to {title} and other browser classics from the ArcadeZone collection."
-    )
-    paragraphs = [intro, history, controls, strategy + ' ' + related_note, closing]
-    text = "\n\n".join(paragraphs)
-    return ensure_word_count(text, title)
-
-
-def ensure_word_count(text, title, min_words=320):
-    words = re.findall(r"\w+", text)
-    if len(words) >= min_words:
-        return text
-
-    fillers = [
-        f"{title} is featured here because it offers a polished browser experience with fast loading and easy access from any modern device.",
-        f"This page also covers what makes {title} work well online and how to get the most out of every session.",
-        f"When you want a quick game break, {title} delivers simple play mechanics and satisfying goals without distractions.",
-        f"Each section on this page is designed to help you understand the controls, learn good strategy, and avoid common mistakes.",
-        f"ArcadeZone keeps the page format clean so the gameplay information is easy to scan and the external play link is right where you need it.",
-        f"The content on this page is written to serve players who want clear instructions, better scoring tips, and better browser game choices.",
-    ]
-
-    filler_index = 0
-    while len(words) < min_words:
-        text += "\n\n" + fillers[filler_index % len(fillers)]
-        filler_index += 1
-        words = re.findall(r"\w+", text)
-    return text
-
-
-def make_how_to_play(game):
-    title = game['title']
-    tag = game['tag']
-    category = game['category']
-    if 'chess' in title.lower():
-        return "Move the pieces with the mouse or tap controls, capture the opponent, and aim for checkmate while thinking one step ahead."
-    if 'word' in title.lower() or 'wordle' in title.lower():
-        return "Type letters or tap the keyboard to guess words. Use clues from previous attempts to solve the daily puzzle."
-    if 'pool' in title.lower() or 'billiards' in title.lower():
-        return "Aim carefully, then click or tap to hit the cue ball and sink the target balls with steady control."
-    if 'racing' in category or 'bike' in tag.lower() or 'drift' in tag.lower():
-        return "Use the arrow keys or WASD for steering, and manage speed to stay on the track through each turn."
-    if 'puzzle' in category or 'match' in tag.lower() or 'logic' in tag.lower():
-        return "Use click or touch controls to move pieces, solve levels, and build the right pattern before time runs out."
-    if 'action' in category or 'shoot' in tag.lower() or 'battle' in tag.lower():
-        return "Use your mouse to aim and keyboard keys for movement. Stay aware of enemies and stay on the move."
-    if 'classic' in category or 'arcade' in tag.lower():
-        return "This classic game uses simple controls and quick reflexes. Use arrow keys or one-button input to play."
-    return CONTROL_TEMPLATES.get(tag, CONTROL_TEMPLATES.get(category.capitalize(), "Use your mouse, keyboard, or touchscreen to play and enjoy the game in your browser."))
-
-
-def make_tips(game):
-    category = game['category']
-    tips = TIP_TEMPLATES.get(category, TIP_TEMPLATES['featured'])
-    return tips[:3]
-
-
-def make_highlights(game):
-    title = game['title']
-    tag = game['tag']
-    category = game['category']
-    highlights = [
-        f"Instant browser access with no downloads or installations required.",
-        f"Designed for {tag.lower()} players who want a quick, reliable game experience.",
-        f"A clean, mobile-ready page helps you learn the controls and start playing immediately."
-    ]
-    if category == 'classics':
-        highlights[1] = f"Enjoy a nostalgic arcade experience with a classic {title} play style."
-    if category == 'puzzle':
-        highlights[1] = f"Practice your logic and pattern skills with a calm, focused puzzle experience."
-    if category == 'racing':
-        highlights[1] = f"Get into fast races and tight tracks with responsive browser controls."
-    if category == 'sports':
-        highlights[1] = f"Play competitive sports challenges that fit well in quick browser sessions."
-    return "\n".join(f"          <li>{item}</li>" for item in highlights)
-
-
-def make_essentials(game):
-    title = game['title']
-    category = game['category']
-    tag = game['tag']
-    best_for = {
-        'featured': 'players looking for top browser game picks',
-        'action': 'fast-paced action and quick reflex fun',
-        'puzzle': 'brain training and thoughtful challenges',
-        'racing': 'speed, timing, and track mastery',
-        'sports': 'competitive sports mini-games',
-        'classics': 'nostalgic arcade gameplay'
-    }.get(category, 'browser game sessions')
-    controls = {
-        'Strategy': 'mouse clicks and keyboard movement for thoughtful play',
-        'Puzzle': 'click and tap controls, with keyboard support where available',
-        'Racing': 'arrow keys or WASD for steering and speed control',
-        'Sports': 'mouse aiming and quick key presses for shots and movement',
-        'Shooter': 'mouse aiming plus keyboard movement for fast action',
-        'Arcade': 'simple, responsive controls for classic gameplay',
-        'Multiplayer': 'fast reactions, movement, and careful spacing',
-        'Battle Royale': 'strategic movement and defense while competing with others',
-        'Platformer': 'timed jumps and smooth navigation',
-        'Bike': 'steering and speed control on dynamic tracks',
-        'Match-3': 'swipe or click to match tiles and clear the board',
-        'Logic': 'planning moves before clicking or tapping'
-    }.get(tag, 'use your keyboard, mouse, or touchscreen to play')
-    return "\n".join([
-        f"          <li><strong>Category:</strong> {category.title()}</li>",
-        f"          <li><strong>Game type:</strong> {tag}</li>",
-        f"          <li><strong>Best for:</strong> {best_for}</li>",
-        f"          <li><strong>Controls:</strong> {controls}</li>"
-    ])
-
-
-def make_developer_info(game):
-    title = game['title']
-    return (
-        f"ArcadeZone provides this page as a guide to {title}. Wherever possible, we link directly to the game’s browser-ready version and credit the original creators. "
-        f"If you want more browser game recommendations, visit the <a href=\"/all-games.html\">All Games</a> page."
-    )
+def word_count(text: str) -> int:
+    return len(re.findall(r"\w+", text))
 
 
 def make_related_games(related_games):
     if not related_games:
-        return "Explore other browser games on the <a href=\"/all-games.html\">All Games</a> page."
+        return "Explore other reviewed browser games on the <a href=\"/all-games.html\">All Games</a> page."
     links = [f"<a href=\"/{game['slug']}.html\">{game['title']}</a>" for game in related_games]
-    return f"Related browser games you may enjoy: {', '.join(links)}."
+    return f"Related reviewed games: {', '.join(links)}."
+
+
+def make_description(game, related_games):
+    slug = game["slug"]
+    title = game["title"]
+    profile = EDITORIAL_PROFILES.get(slug)
+    related_sentence = make_related_games(related_games)
+
+    if not profile:
+        return (
+            f"<p>{title} is listed on ArcadeZone as part of our broader browser game library.</p>"
+            f"<p>We keep this page available for players who want direct access to the original source. "
+            f"Core controls, external link details, and related game navigation are included below.</p>"
+            f"<p>{related_sentence}</p>"
+        )
+
+    sections = [
+        f"<p>{profile['hook']}</p>",
+        "<h2>How to approach this game</h2>",
+        f"<p>{profile['strategy']}</p>",
+        "<h2>Common mistakes to avoid</h2>",
+        f"<p>{profile['mistakes']}</p>",
+        "<h2>Who this game is best for</h2>",
+        f"<p>{profile['who_for']}</p>",
+        "<h2>Why it stays in our curated index</h2>",
+        f"<p>{game['title']} stays in ArcadeZone's reviewed collection because it has a clear skill loop, reliable browser access, and enough real gameplay depth to justify written guidance. We do not keep indexed pages that only repeat generic descriptions or send users to thin external links.</p>",
+        "<h2>Best session style for this game</h2>",
+        f"<p>{SESSION_NOTES.get(game['category'], SESSION_NOTES['featured'])}</p>",
+        f"<p>{related_sentence}</p>",
+    ]
+    text = "\n".join(sections)
+    if word_count(re.sub(r"<[^>]+>", " ", text)) < 220:
+        text += (
+            f"\n<p>ArcadeZone reviews this title for accessibility, control clarity, and replay value before keeping it in the curated index. "
+            f"Our goal is to help players choose the right game quickly, then improve through practical guidance instead of generic filler text.</p>"
+        )
+    return text
+
+
+def make_how_to_play(game):
+    tag = game["tag"].lower()
+    category = game["category"].lower()
+    if "chess" in game["slug"]:
+        return "Move pieces with click or tap controls, control the center early, and build toward checkmate while protecting your king."
+    if "wordle" in game["slug"]:
+        return "Enter a five-letter guess each round, then use letter and position feedback to narrow the target word efficiently."
+    if category == "racing" or "drift" in tag or "bike" in tag:
+        return "Use arrow keys or WASD for steering and throttle. Brake earlier than expected and keep exits clean for better lap consistency."
+    if "shooter" in tag or "fps" in tag or category == "action":
+        return "Use keyboard movement with mouse aiming. Stay mobile, pre-aim common angles, and avoid open-lane overexposure."
+    if category == "puzzle":
+        return "Use click, tap, or keyboard controls depending on the title. Plan moves ahead and prioritize board safety over speed."
+    if category == "classics":
+        return "Use simple directional controls and one-action inputs where available. Learn enemy patterns and route safely for longer runs."
+    return "Use the built-in browser controls shown by the game source and focus on timing plus positioning to improve consistency."
+
+
+def make_tips(game):
+    slug = game["slug"]
+    profile = EDITORIAL_PROFILES.get(slug)
+    if profile:
+        return [
+            profile["strategy"],
+            profile["mistakes"],
+            "Practice in short sessions and track one improvement goal per run to build measurable progress.",
+        ]
+    return [
+        "Learn controls first and avoid rushing into difficult sections.",
+        "Prioritize consistent, low-risk play over flashy attempts.",
+        "Use related reviewed games to find similar mechanics and improve faster.",
+    ]
+
+
+def make_highlights(game):
+    category = game["category"].title()
+    return "\n".join(
+        [
+            "          <li>Curated review page with practical strategy guidance and clean navigation.</li>",
+            "          <li>Direct access to browser gameplay source with no installs required.</li>",
+            f"          <li>Category fit: {category} gameplay style with related recommendations.</li>",
+        ]
+    )
+
+
+def make_essentials(game):
+    index_status = "Indexed (reviewed)" if game["slug"] in INDEXABLE_SLUGS else "Archive listing (not indexed)"
+    return "\n".join(
+        [
+            f"          <li><strong>Category:</strong> {game['category'].title()}</li>",
+            f"          <li><strong>Game type:</strong> {game['tag']}</li>",
+            f"          <li><strong>Page status:</strong> {index_status}</li>",
+            "          <li><strong>Play format:</strong> opens the original browser source in a new tab</li>",
+        ]
+    )
+
+
+def make_developer_info(game):
+    return (
+        f"ArcadeZone reviews {game['title']} for control clarity, replay value, and accessibility before listing it as curated content. "
+        f"We link to the original browser source and provide player-focused guidance on this page."
+    )
+
+
+def build_faq_html_section(game):
+    questions = FAQS.get(game["slug"])
+    if not questions:
+        return ""
+
+    items = []
+    for q, a in questions:
+        items.append(
+            "          <div class=\"faq-item\">"
+            f"<h3>{q}</h3>"
+            f"<p>{a}</p>"
+            "</div>"
+        )
+
+    return (
+        "      <section class=\"routine faq-section\">\n"
+        "        <h2>Frequently asked questions</h2>\n"
+        "        <div class=\"faq-list\">\n"
+        + "\n".join(items)
+        + "\n        </div>\n"
+        "      </section>"
+    )
+
+
+def build_faq_schema(game):
+    if game["slug"] not in FAQ_GAME_SLUGS:
+        return ""
+
+    qa = []
+    for q, a in FAQS.get(game["slug"], []):
+        qa.append(
+            {
+                "@type": "Question",
+                "name": q,
+                "acceptedAnswer": {"@type": "Answer", "text": a},
+            }
+        )
+
+    data = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": qa}
+    return "<script type=\"application/ld+json\">\n" + json.dumps(data, ensure_ascii=True) + "\n</script>"
 
 
 def render_all_games_page(games):
+    curated_games = [g for g in games if g["slug"] in INDEXABLE_SLUGS]
     categories = {
-        'featured': 'Featured',
-        'action': 'Action',
-        'puzzle': 'Puzzle',
-        'racing': 'Racing',
-        'sports': 'Sports',
-        'classics': 'Classics',
+        "featured": "Featured",
+        "action": "Action",
+        "puzzle": "Puzzle",
+        "racing": "Racing",
+        "sports": "Sports",
+        "classics": "Classics",
     }
     sections = []
     for key, label in categories.items():
-        section_games = [game for game in games if game['category'] == key]
+        section_games = [game for game in curated_games if game["category"] == key]
         if not section_games:
             continue
         section_links = "\n".join(
-            f"        <li><a href=\"{game['slug']}.html\">{game['title']}</a> — {game['tag']}</li>"
+            f"        <li><a href=\"{game['slug']}.html\">{game['title']}</a> - {game['tag']}</li>"
             for game in section_games
         )
         sections.append(
-            f"    <section class=\"game-group\">\n      <h2>{label}</h2>\n      <p>Explore {label.lower()} browser games on ArcadeZone with direct play pages, tips, and strategy guidance.</p>\n      <ul>\n{section_links}\n      </ul>\n    </section>"
+            f"    <section class=\"game-group\">\n      <h2>{label}</h2>\n      <p>Reviewed games in our curated {label.lower()} collection.</p>\n      <ul>\n{section_links}\n      </ul>\n    </section>"
         )
     content = "\n\n".join(sections)
     return f"""<!DOCTYPE html>
-<html lang=\"en\">
+<html lang="en">
 <head>
-  <meta charset=\"utf-8\" />
-  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\" />
-  <meta name=\"robots\" content=\"index, follow\" />
-  <title>All Games — ArcadeZone</title>
-  <meta name=\"description\" content=\"Browse all free browser games available on ArcadeZone, organized by category and ready to play.\" />
-  <meta property=\"og:type\" content=\"website\" />
-  <meta property=\"og:url\" content=\"{BASE_URL}/all-games.html\" />
-  <meta property=\"og:title\" content=\"All Games — ArcadeZone\" />
-  <meta property=\"og:description\" content=\"Browse all free browser games available on ArcadeZone, organized by category and ready to play.\" />
-  <meta name=\"twitter:card\" content=\"summary_large_image\" />
-  <link rel=\"stylesheet\" href=\"/css/style.css\" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="index, follow" />
+  <title>All Games - ArcadeZone</title>
+  <meta name="description" content="Browse curated and reviewed browser games on ArcadeZone by category." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="{BASE_URL}/all-games.html" />
+  <meta property="og:title" content="All Games - ArcadeZone" />
+  <meta property="og:description" content="Browse curated and reviewed browser games on ArcadeZone by category." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
   <header>
-    <a href=\"/\">ArcadeZone</a> › <span>All Games</span>
+    <a href="/">ArcadeZone</a> - <span>All Games</span>
   </header>
   <main>
     <article>
       <h1>All Games</h1>
-      <p>Browse the full ArcadeZone library by category and choose the perfect browser game for your mood.</p>
+      <p>This page lists the titles currently in ArcadeZone's curated index. Every listed game has unique editorial guidance and regular quality review.</p>
 {content}
     </article>
   </main>
   <footer>
-    <p><a href=\"/privacy.html\">Privacy</a> • <a href=\"/contact.html\">Contact</a></p>
+    <p><a href="/about.html">About</a> - <a href="/editorial-policy.html">Editorial Policy</a> - <a href="/privacy.html">Privacy</a> - <a href="/contact.html">Contact</a></p>
   </footer>
 </body>
 </html>"""
@@ -301,34 +448,39 @@ def render_all_games_page(games):
 def render_sitemap(games):
     lines = ["<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">"]
     lines.append(f"  <url><loc>{BASE_URL}/</loc><changefreq>daily</changefreq></url>")
-    lines.append(f"  <url><loc>{BASE_URL}/all-games.html</loc><changefreq>monthly</changefreq></url>")
-    for page in ("about.html", "contact.html", "privacy.html", "terms.html", "dmca.html"):
-        lines.append(f"  <url><loc>{BASE_URL}/{page}</loc><changefreq>yearly</changefreq></url>")
+    lines.append(f"  <url><loc>{BASE_URL}/all-games.html</loc><changefreq>weekly</changefreq></url>")
+    for page in ("about.html", "contact.html", "privacy.html", "terms.html", "dmca.html", "editorial-policy.html"):
+        lines.append(f"  <url><loc>{BASE_URL}/{page}</loc><changefreq>monthly</changefreq></url>")
     for game in games:
-        lines.append(f"  <url><loc>{BASE_URL}/{game['slug']}.html</loc><changefreq>monthly</changefreq></url>")
+        if game["slug"] in INDEXABLE_SLUGS:
+            lines.append(f"  <url><loc>{BASE_URL}/{game['slug']}.html</loc><changefreq>weekly</changefreq></url>")
     lines.append("</urlset>")
     return "\n".join(lines)
 
 
 def render_page(game, related_games):
     page = TEMPLATE_PATH.read_text(encoding="utf-8")
+    tips = make_tips(game)
     replacements = {
-        "title": game['title'],
-        "slug": game['slug'],
-        "meta_description": f"Play {game['title']} free online on ArcadeZone. Expert tips, controls, and quick access to the browser game.",
+        "title": game["title"],
+        "slug": game["slug"],
+        "meta_description": f"Play {game['title']} free online on ArcadeZone with practical strategy, controls, and direct browser access.",
         "screenshot_url": f"images/{game['slug']}.svg",
-        "category": game['category'],
-        "tag": game['tag'],
-        "description_300_plus": make_description(game, related_games),
+        "category": game["category"],
+        "tag": game["tag"],
+        "description_html": make_description(game, related_games),
         "how_to_play": make_how_to_play(game),
         "highlights": make_highlights(game),
         "essentials": make_essentials(game),
-        "tip1": make_tips(game)[0],
-        "tip2": make_tips(game)[1],
-        "tip3": make_tips(game)[2],
-        "external_url": game['external_url'],
+        "tip1": tips[0],
+        "tip2": tips[1],
+        "tip3": tips[2],
+        "external_url": game["external_url"],
         "related_games": make_related_games(related_games),
         "developer_info": make_developer_info(game),
+        "robots_content": "index, follow" if game["slug"] in INDEXABLE_SLUGS else "noindex, follow",
+        "faq_html_section": build_faq_html_section(game),
+        "faq_schema": build_faq_schema(game),
     }
     for key, value in replacements.items():
         page = page.replace(f"{{{{{key}}}}}", value)
@@ -336,27 +488,27 @@ def render_page(game, related_games):
 
 
 def main():
-    with CSV_PATH.open(newline='', encoding='utf-8') as csvfile:
+    with CSV_PATH.open(newline="", encoding="utf-8") as csvfile:
         reader = csv.DictReader(csvfile)
         games = [row for row in reader]
 
     games_by_category = {}
     for game in games:
-        games_by_category.setdefault(game['category'], []).append(game)
+        games_by_category.setdefault(game["category"], []).append(game)
 
     for game in games:
-        category_games = [g for g in games_by_category[game['category']] if g['slug'] != game['slug']]
+        category_games = [g for g in games_by_category[game["category"]] if g["slug"] != game["slug"] and g["slug"] in INDEXABLE_SLUGS]
         related_games = category_games[:3]
         output = render_page(game, related_games)
         path = OUTPUT_DIR / f"{game['slug']}.html"
-        path.write_text(output, encoding='utf-8')
+        path.write_text(output, encoding="utf-8")
         print(f"Wrote {path}")
 
-    (OUTPUT_DIR / "all-games.html").write_text(render_all_games_page(games), encoding='utf-8')
+    (OUTPUT_DIR / "all-games.html").write_text(render_all_games_page(games), encoding="utf-8")
     print("Wrote all-games.html")
-    (OUTPUT_DIR / "sitemap.xml").write_text(render_sitemap(games), encoding='utf-8')
+    (OUTPUT_DIR / "sitemap.xml").write_text(render_sitemap(games), encoding="utf-8")
     print("Wrote sitemap.xml")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
