@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://www.pxlrush.com/</loc><changefreq>daily</changefreq></url>
-  <url><loc>https://www.pxlrush.com/all-games.html</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://www.pxlrush.com/about.html</loc><changefreq>monthly</changefreq></url>
   <url><loc>https://www.pxlrush.com/contact.html</loc><changefreq>monthly</changefreq></url>
   <url><loc>https://www.pxlrush.com/privacy.html</loc><changefreq>monthly</changefreq></url>
@@ -11,12 +10,8 @@
   <url><loc>https://www.pxlrush.com/2048.html</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://www.pxlrush.com/pac-man.html</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://www.pxlrush.com/snake.html</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://www.pxlrush.com/flappy-bird.html</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://www.pxlrush.com/tetris.html</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://www.pxlrush.com/chess.html</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://www.pxlrush.com/krunker-io.html</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://www.pxlrush.com/slither-io.html</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://www.pxlrush.com/1v1-lol.html</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://www.pxlrush.com/sudoku.html</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://www.pxlrush.com/wordle.html</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://www.pxlrush.com/minesweeper.html</loc><changefreq>weekly</changefreq></url>
@@ -25,7 +20,6 @@
   <url><loc>https://www.pxlrush.com/basketball-stars.html</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://www.pxlrush.com/8-ball-pool.html</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://www.pxlrush.com/space-invaders.html</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://www.pxlrush.com/galaga.html</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://www.pxlrush.com/geometry-dash.html</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://www.pxlrush.com/run-3.html</loc><changefreq>weekly</changefreq></url>
 </urlset>

@@ -13,12 +13,8 @@ INDEXABLE_SLUGS = {
     "2048",
     "pac-man",
     "snake",
-    "flappy-bird",
     "tetris",
-    "chess",
     "krunker-io",
-    "slither-io",
-    "1v1-lol",
     "geometry-dash",
     "moto-x3m",
     "drift-hunters",
@@ -29,7 +25,6 @@ INDEXABLE_SLUGS = {
     "minesweeper",
     "run-3",
     "space-invaders",
-    "galaga",
 }
 
 FAQ_GAME_SLUGS = {
@@ -417,13 +412,13 @@ def render_all_games_page(games):
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="robots" content="index, follow" />
+  <meta name="robots" content="noindex, follow" />
   <title>All Games - ArcadeZone</title>
-  <meta name="description" content="Browse curated and reviewed browser games on ArcadeZone by category." />
+  <meta name="description" content="Browse ArcadeZone's curated browser games by category. This page is a navigation hub for reviewed titles." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="{BASE_URL}/all-games.html" />
   <meta property="og:title" content="All Games - ArcadeZone" />
-  <meta property="og:description" content="Browse curated and reviewed browser games on ArcadeZone by category." />
+  <meta property="og:description" content="Browse ArcadeZone's curated browser games by category. This page is a navigation hub for reviewed titles." />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="stylesheet" href="/css/style.css" />
 </head>
@@ -434,8 +429,13 @@ def render_all_games_page(games):
   <main>
     <article>
       <h1>All Games</h1>
-      <p>This page lists the titles currently in ArcadeZone's curated index. Every listed game has unique editorial guidance and regular quality review.</p>
+      <p>This page is a navigation hub for the small set of titles ArcadeZone keeps in its reviewed index. The archived library stays available for players, but only the strongest pages remain part of the curated set.</p>
+      <p>We keep this list short on purpose. Each indexed page needs enough original guidance, clear controls, and real play value to justify being featured here.</p>
 {content}
+      <section class="game-group">
+        <h2>How we choose reviewed titles</h2>
+        <p>ArcadeZone keeps the indexed set intentionally small so each page can be maintained properly. We prefer games that have stable browser access, clear controls, and enough replay value to support original editorial notes.</p>
+      </section>
     </article>
   </main>
   <footer>
@@ -448,7 +448,6 @@ def render_all_games_page(games):
 def render_sitemap(games):
     lines = ["<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">"]
     lines.append(f"  <url><loc>{BASE_URL}/</loc><changefreq>daily</changefreq></url>")
-    lines.append(f"  <url><loc>{BASE_URL}/all-games.html</loc><changefreq>weekly</changefreq></url>")
     for page in ("about.html", "contact.html", "privacy.html", "terms.html", "dmca.html", "editorial-policy.html"):
         lines.append(f"  <url><loc>{BASE_URL}/{page}</loc><changefreq>monthly</changefreq></url>")
     for game in games:
