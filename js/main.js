@@ -1,3 +1,5 @@
+const ALL_GAMES = typeof GAMES !== 'undefined' ? GAMES : [];
+
 function slugifyTitle(title) {
   return title
     .toLowerCase()
@@ -28,7 +30,7 @@ const CURATED_GAME_SLUGS = new Set([
   'galaga'
 ]);
 
-const CURATED_GAMES = GAMES.filter(game => CURATED_GAME_SLUGS.has(slugifyTitle(game.title)));
+const CURATED_GAMES = ALL_GAMES.filter(game => CURATED_GAME_SLUGS.has(slugifyTitle(game.title)));
 
 function renderGames() {
   const categories = ['featured', 'action', 'puzzle', 'racing', 'sports', 'classics'];
@@ -115,5 +117,8 @@ function initCookieNotice() {
   });
 }
 
-renderGames();
+if (ALL_GAMES.length > 0) {
+  renderGames();
+}
+
 initCookieNotice();
