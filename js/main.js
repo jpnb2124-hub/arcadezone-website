@@ -11,23 +11,13 @@ const CURATED_GAME_SLUGS = new Set([
   '2048',
   'pac-man',
   'snake',
-  'flappy-bird',
   'tetris',
-  'chess',
   'krunker-io',
-  'slither-io',
-  '1v1-lol',
   'geometry-dash',
-  'moto-x3m',
   'drift-hunters',
-  'basketball-stars',
   '8-ball-pool',
   'sudoku',
-  'wordle',
-  'minesweeper',
-  'run-3',
-  'space-invaders',
-  'galaga'
+  'space-invaders'
 ]);
 
 const CURATED_GAMES = ALL_GAMES.filter(game => CURATED_GAME_SLUGS.has(slugifyTitle(game.title)));

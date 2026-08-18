@@ -16,14 +16,9 @@ INDEXABLE_SLUGS = {
     "tetris",
     "krunker-io",
     "geometry-dash",
-    "moto-x3m",
     "drift-hunters",
-    "basketball-stars",
     "8-ball-pool",
     "sudoku",
-    "wordle",
-    "minesweeper",
-    "run-3",
     "space-invaders",
 }
 
