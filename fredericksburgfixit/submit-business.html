@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Submit Your Business | Fredericksburg Fix It</title>
+    <meta name="description" content="Submit a local service business to the Fredericksburg Fix It directory." />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <a class="brand" href="/">Fredericksburg<span>FixIt</span></a>
+        <nav class="main-nav" aria-label="Main navigation">
+          <a href="/">Home</a>
+          <a href="/#categories">Categories</a>
+          <a href="about">About</a>
+        </nav>
+        <a class="button button-primary" href="contact">Contact</a>
+      </div>
+    </header>
+
+    <main class="page-shell">
+      <div class="container page-header">
+        <span class="eyebrow">Get listed</span>
+        <h1>Submit your business</h1>
+        <p>We are building a local service network for Fredericksburg homeowners.</p>
+      </div>
+
+      <div class="container content-card">
+        <p>Include location, media, and scheduling details so your listing looks complete and trustworthy.</p>
+        <form action="mailto:hello@fredericksburgfixit.com" method="post" enctype="text/plain" class="submission-form">
+          <div class="form-grid">
+            <label class="form-field">Business name<input class="form-control" type="text" name="business" required /></label>
+            <label class="form-field">Category<input class="form-control" type="text" name="category" required /></label>
+            <label class="form-field">Phone number<input class="form-control" type="tel" name="phone" required /></label>
+            <label class="form-field">Website<input class="form-control" type="url" name="website" /></label>
+            <label class="form-field form-span-2">Street address<input class="form-control" type="text" name="street_address" required /></label>
+            <label class="form-field">City<input class="form-control" type="text" name="city" value="Fredericksburg" required /></label>
+            <label class="form-field">State<input class="form-control" type="text" name="state" value="VA" required /></label>
+            <label class="form-field">ZIP code<input class="form-control" type="text" name="zip_code" /></label>
+            <label class="form-field">Service area<input class="form-control" type="text" name="service_area" placeholder="Fredericksburg, Stafford, Spotsylvania" /></label>
+            <label class="form-field">Time zone
+              <select class="form-control" name="time_zone">
+                <option value="America/New_York">America/New_York (ET)</option>
+                <option value="America/Chicago">America/Chicago (CT)</option>
+                <option value="America/Denver">America/Denver (MT)</option>
+                <option value="America/Los_Angeles">America/Los_Angeles (PT)</option>
+              </select>
+            </label>
+            <label class="form-field">Weekday opening time<input class="form-control" type="time" name="weekday_open" /></label>
+            <label class="form-field">Weekday closing time<input class="form-control" type="time" name="weekday_close" /></label>
+            <label class="form-field">Saturday hours<input class="form-control" type="text" name="saturday_hours" placeholder="9:00 AM - 2:00 PM" /></label>
+            <label class="form-field">Sunday hours<input class="form-control" type="text" name="sunday_hours" placeholder="Emergency only" /></label>
+            <label class="form-field">GPS latitude<input class="form-control" type="text" name="gps_latitude" placeholder="38.3032" /></label>
+            <label class="form-field">GPS longitude<input class="form-control" type="text" name="gps_longitude" placeholder="-77.4605" /></label>
+            <label class="form-field form-span-2">Google Maps link<input class="form-control" type="url" name="map_link" placeholder="https://maps.google.com/?q=..." /></label>
+            <label class="form-field form-span-2">Booking calendar link<input class="form-control" type="url" name="calendar_link" placeholder="https://calendar.google.com/..." /></label>
+            <label class="form-field form-span-2">Photo URLs (comma separated)<input class="form-control" type="text" name="photo_urls" placeholder="https://...jpg, https://...jpg" /></label>
+            <label class="form-field form-span-2">Video URL<input class="form-control" type="url" name="video_url" placeholder="https://youtube.com/..." /></label>
+            <label class="form-field form-span-2">Short description<textarea class="form-control" name="description" rows="5"></textarea></label>
+          </div>
+          <p><button type="submit" class="button button-primary">Send listing</button></p>
+        </form>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-wrap">
+        <div>
+          <a class="brand footer-brand" href="/">Fredericksburg<span>FixIt</span></a>
+          <p>Trusted local home services for Fredericksburg homeowners.</p>
+        </div>
+        <div class="footer-links">
+          <a href="about">About</a>
+          <a href="contact">Contact</a>
+          <a href="privacy">Privacy</a>
+          <a href="terms">Terms</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
