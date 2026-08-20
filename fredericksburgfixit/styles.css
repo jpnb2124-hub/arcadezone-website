@@ -717,6 +717,12 @@ img {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.spotlight-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .video-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -728,6 +734,33 @@ img {
   border: 1px solid var(--line);
   border-radius: 18px;
   overflow: hidden;
+}
+
+.spotlight-card {
+  margin: 0;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow) 0 14px 28px;
+}
+
+.spotlight-card img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+.spotlight-body {
+  padding: 20px;
+}
+
+.spotlight-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
 }
 
 .media-card img {
@@ -869,6 +902,7 @@ img {
 
   .reality-grid,
   .directory-tools,
+  .spotlight-grid,
   .media-grid,
   .video-grid,
   .form-grid {
